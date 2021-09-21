@@ -15,7 +15,7 @@ public enum Runtime {
     /// - Parameter object: *reference-type* object
     /// - Returns: Pointer to the object's ISA
     public static func getISA(object: AnyObject) -> UInt {
-        let ptr: Ref<UInt> = pointer(to: object)
+        let ptr: UnsafeMutablePointer<UInt> = pointer(to: object)
         return *ptr
     }
     
@@ -25,7 +25,7 @@ public enum Runtime {
     /// - Parameter object: *reference-type* object
     /// - Returns: Pointer to the object's compound reference count field (strong + unowned + flags)
     public static func getCompoundRefField(object: AnyObject) -> UInt {
-        let ptr: Ref<UInt> = pointer(to: object)
+        let ptr: UnsafeMutablePointer<UInt> = pointer(to: object)
         return *(ptr + strideof(Word.self))
     }
     
@@ -42,7 +42,7 @@ public enum Runtime {
     
     static func getSidetable(object: AnyObject) -> SizeTable? {
         guard isUsingSidetable(object: object) else { return nil }
-        let ptr: Ref<UInt> = pointer(to: object) + 8
+        let ptr: UnsafeMutablePointer<UInt> = pointer(to: object) + 8
         return *UnsafeMutableRawPointer(ptr)
     }
     

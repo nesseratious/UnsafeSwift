@@ -5,8 +5,8 @@ final class PointersTests: XCTestCase {
     
     func testPointerValueType() throws {
         var a = 42
-        let p1: Ref<Int> = pointer(to: &a)
-        let p2: Ref<Int> = pointer(to: &a)
+        let p1: UnsafeMutablePointer<Int> = pointer(to: &a)
+        let p2: UnsafeMutablePointer<Int> = pointer(to: &a)
         XCTAssertEqual(p1, p2)
         XCTAssertEqual(*p1, *p2)
     }
@@ -20,8 +20,8 @@ final class PointersTests: XCTestCase {
     
     func testPointerReferenceType() throws {
         let a = SwiftClass()
-        let p1: Ref<SwiftClass> = pointer(to: a)
-        let p2: Ref<SwiftClass> = pointer(to: a)
+        let p1: UnsafeMutablePointer<SwiftClass> = pointer(to: a)
+        let p2: UnsafeMutablePointer<SwiftClass> = pointer(to: a)
         XCTAssertEqual(p1, p2)
         XCTAssertEqual(*p1, *p2)
     }

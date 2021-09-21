@@ -7,15 +7,13 @@
 
 import Foundation
 
-public typealias Ref<T> = UnsafeMutablePointer<T>
-
 @inlinable
 @inline(__always)
 /// Returns a pointer to the *value-type* object
 /// - Parameter obj: Object with *value-type* semantics
 /// - Returns: Pointer to the object
 ///
-public func pointer<T>(to obj: UnsafeRawPointer) -> Ref<T> {
+public func pointer<T>(to obj: UnsafeRawPointer) -> UnsafeMutablePointer<T> {
     return UnsafeMutableRawPointer(mutating: obj).assumingMemoryBound(to: T.self)
 }
 
@@ -25,29 +23,21 @@ public func pointer<T>(to obj: UnsafeRawPointer) -> Ref<T> {
 /// - Parameter obj: Object with *reference-type* semantics
 /// - Returns: Pointer to the object
 ///
-public func pointer<T>(to obj: AnyObject) -> Ref<T> {
+public func pointer<T>(to obj: AnyObject) -> UnsafeMutablePointer<T> {
     return Unmanaged.passUnretained(obj).toOpaque().assumingMemoryBound(to: T.self)
 }
 
-public protocol RefProtocol {
-    func dereference<T>() -> T
-}
-
-public protocol VoidRef: RefProtocol {
-    
-}
-
-public protocol TypedRef: RefProtocol {
-
-}
-
-extension UnsafeRawPointer: VoidRef {
+extension UnsafeRawPointer {
+    @inlinable
+    @inline(__always)
     public func dereference<T>() -> T {
         load(as: T.self)
     }
 }
 
-extension UnsafeMutableRawPointer: VoidRef {
+extension UnsafeMutableRawPointer {
+    @inlinable
+    @inline(__always)
     public func dereference<T>() -> T {
         load(as: T.self)
     }
@@ -55,12 +45,10 @@ extension UnsafeMutableRawPointer: VoidRef {
 
 prefix operator *
 
-prefix operator &&
-
 @inlinable
 @inline(__always)
-public prefix func &&<T>(lvalue: inout T) -> UnsafeMutablePointer<T> {
-    return pointer(to: &lvalue)
+public prefix func *<T>(lvalue: TaggedPointer<T>) -> T {
+    return lvalue.pointee
 }
 
 @inlinable

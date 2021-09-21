@@ -49,7 +49,7 @@ public func uncheckedReinterpretationCast<T, V>(_ value: V) -> T {
 func referenceReinterpretationCast<T: AnyObject>(_ value: AnyObject) -> T {
     precondition(T.self != NSObject.self && type(of: value) != NSObject.self, "Cannot cast between NSObject classes, only native Swift types are supported. For NSObjects use Obj-C runtime instead.")
     precondition(strideof(value) >= strideof(T.self), "Different lenghts. This will cause undefined behavior.")
-    let ptr: Ref<T> = pointer(to: value)
+    let ptr: UnsafeMutablePointer<T> = pointer(to: value)
     return *ptr
 }
 
@@ -61,7 +61,7 @@ func referenceReinterpretationCast<T: AnyObject>(_ value: AnyObject) -> T {
 /// - Returns: Provided *reference-type* reinterpreted as another *reference-type* instance.
 func uncheckedReferenceReinterpretationCast<T: AnyObject>(_ value: AnyObject) -> T {
     precondition(T.self != NSObject.self && type(of: value) != NSObject.self, "Cannot cast between NSObject classes, only native Swift types are supported. For NSObjects use Obj-C runtime instead.")
-    let ptr: Ref<T> = pointer(to: value)
+    let ptr: UnsafeMutablePointer<T> = pointer(to: value)
     return *ptr
 }
 
@@ -75,7 +75,7 @@ func referenceToValueReinterpretationCast<T>(_ value: AnyObject) -> T {
     precondition(T.self != NSObject.self && type(of: value) != NSObject.self, "Cannot cast between NSObject classes, only native Swift types are supported. For NSObjects use Obj-C runtime instead.")
     precondition(strideof(value) >= strideof(T.self), "Different lenghts. This will cause undefined behavior.")
     let headerOffset = strideof((Word, Word).self)
-    let membersStart: Ref<T> = pointer(to: value) + headerOffset
+    let membersStart: UnsafeMutablePointer<T> = pointer(to: value) + headerOffset
     return *membersStart
 }
 
@@ -88,6 +88,6 @@ func referenceToValueReinterpretationCast<T>(_ value: AnyObject) -> T {
 func uncheckedReferenceToValueReinterpretationCast<T>(_ value: AnyObject) -> T {
     precondition(T.self != NSObject.self && type(of: value) != NSObject.self, "Cannot cast between NSObject classes, only native Swift types are supported. For NSObjects use Obj-C runtime instead.")
     let headerOffset = strideof((Word, Word).self)
-    let membersStart: Ref<T> = pointer(to: value) + headerOffset
+    let membersStart: UnsafeMutablePointer<T> = pointer(to: value) + headerOffset
     return *membersStart
 }
